@@ -1,0 +1,40 @@
+<!-- Published by XML-WS Runtime (https://github.com/eclipse-ee4j/metro-jax-ws). Runtime's version is XML-WS Runtime 4.0.2 git-revision#0264419. --><xsd:schema xmlns:ns0="http://ws.api.back.webservices.yofik.itmo.ru/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://ws.api.back.webservices.yofik.itmo.ru/">
+  <xsd:complexType name="searchRequest">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="filters" type="ns0:filters"></xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="filters">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="byAgeMax" type="xsd:int"></xsd:element>
+      <xsd:element minOccurs="0" name="byAgeMin" type="xsd:int"></xsd:element>
+      <xsd:element minOccurs="0" name="byFirstName" type="xsd:string"></xsd:element>
+      <xsd:element minOccurs="0" name="byHeightMax" type="xsd:int"></xsd:element>
+      <xsd:element minOccurs="0" name="byHeightMin" type="xsd:int"></xsd:element>
+      <xsd:element minOccurs="0" name="byLastName" type="xsd:string"></xsd:element>
+      <xsd:element minOccurs="0" name="byPatronymic" type="xsd:string"></xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="search">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="arg0" type="ns0:searchRequest"></xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="searchResponse">
+    <xsd:sequence>
+      <xsd:element maxOccurs="unbounded" minOccurs="0" name="return" type="ns0:student"></xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="student">
+    <xsd:sequence>
+      <xsd:element name="age" type="xsd:int"></xsd:element>
+      <xsd:element minOccurs="0" name="firstName" type="xsd:string"></xsd:element>
+      <xsd:element name="height" type="xsd:int"></xsd:element>
+      <xsd:element name="id" type="xsd:long"></xsd:element>
+      <xsd:element minOccurs="0" name="lastName" type="xsd:string"></xsd:element>
+      <xsd:element minOccurs="0" name="patronymic" type="xsd:string"></xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:element name="search" type="ns0:search"></xsd:element>
+  <xsd:element name="searchResponse" type="ns0:searchResponse"></xsd:element>
+</xsd:schema>
