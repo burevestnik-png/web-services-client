@@ -54,7 +54,7 @@ public class SearchCommand implements Command {
 
         System.out.println("The API answered:");
         System.out.println("[");
-        students.forEach(StudentPrinter::toJson);
+        students.forEach(student -> System.out.println(StudentPrinter.toJson(student)));
         System.out.println("]");
     }
 }
