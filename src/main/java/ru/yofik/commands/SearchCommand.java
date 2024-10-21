@@ -17,13 +17,13 @@ public class SearchCommand implements Command {
 
     private final ConsoleBuilder consoleBuilder = new ConsoleBuilder(
             new ArrayList<ConsoleBuilder.Prompt>() {{
-                add(new ConsoleBuilder.Prompt("byAgeMax", "Фильтровать по byAgeMax?", false));
-                add(new ConsoleBuilder.Prompt("byAgeMin", "Фильтровать по byAgeMin?", false));
-                add(new ConsoleBuilder.Prompt("byFirstName", "Фильтровать по byFirstName?", false));
-                add(new ConsoleBuilder.Prompt("byHeightMax", "Фильтровать по byHeightMax?", false));
-                add(new ConsoleBuilder.Prompt("byHeightMin", "Фильтровать по byHeightMin?", false));
-                add(new ConsoleBuilder.Prompt("byLastName", "Фильтровать по byLastName?", false));
-                add(new ConsoleBuilder.Prompt("byPatronymic", "Фильтровать по byPatronymic?", false));
+                add(new ConsoleBuilder.Prompt("byAgeMax", "Фильтровать по byAgeMax?", false, ConsoleBuilder.Prompt.Type.INT));
+                add(new ConsoleBuilder.Prompt("byAgeMin", "Фильтровать по byAgeMin?", false, ConsoleBuilder.Prompt.Type.INT));
+                add(new ConsoleBuilder.Prompt("byFirstName", "Фильтровать по byFirstName?", false, ConsoleBuilder.Prompt.Type.STRING));
+                add(new ConsoleBuilder.Prompt("byHeightMax", "Фильтровать по byHeightMax?", false, ConsoleBuilder.Prompt.Type.INT));
+                add(new ConsoleBuilder.Prompt("byHeightMin", "Фильтровать по byHeightMin?", false, ConsoleBuilder.Prompt.Type.INT));
+                add(new ConsoleBuilder.Prompt("byLastName", "Фильтровать по byLastName?", false, ConsoleBuilder.Prompt.Type.STRING));
+                add(new ConsoleBuilder.Prompt("byPatronymic", "Фильтровать по byPatronymic?", false, ConsoleBuilder.Prompt.Type.STRING));
             }}
     );
 
@@ -33,20 +33,17 @@ public class SearchCommand implements Command {
 
     @Override
     public void execute() {
-        Map<String, String> answers = consoleBuilder.requestPrompts();
+        Map<String, Object> answers = consoleBuilder.requestPrompts();
         System.out.println(answers);
 
         Filters filters = new Filters();
-        Arrays.stream(filters.getClass().getDeclaredFields()).forEach(field -> {
-            try {
-                Field f = filters.getClass().getDeclaredField(field.getName());
-                f.setAccessible(true);
-                f.set(filters, ObjectParser.parse(answers.get(field.getName())));
-            } catch (NoSuchFieldException | IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
-        });
-
+        filters.setByAgeMax((Integer) answers.get("byAgeMax"));
+        filters.setByAgeMin((Integer) answers.get("byAgeMin"));
+        filters.setByFirstName((String) answers.get("byFirstName"));
+        filters.setByHeightMax((Integer) answers.get("byHeightMax"));
+        filters.setByHeightMin((Integer) answers.get("byHeightMin"));
+        filters.setByLastName((String) answers.get("byLastName"));
+        filters.setByPatronymic((String) answers.get("byPatronymic"));
 
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setFilters(filters);

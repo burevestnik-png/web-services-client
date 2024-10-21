@@ -2,8 +2,7 @@ package ru.yofik;
 
 import ru.itmo.yofik.webservices.back.api.ws.YofikWebService;
 import ru.itmo.yofik.webservices.back.api.ws.YofikWebService_Service;
-import ru.yofik.commands.Command;
-import ru.yofik.commands.SearchCommand;
+import ru.yofik.commands.*;
 
 import java.util.*;
 
@@ -15,13 +14,17 @@ public class Main {
 
     private static Map<String, Command> commands = new HashMap<String, Command>() {{
         put("search", new SearchCommand(service));
+        put("add", new AddCommand(service));
+        put("update", new UpdateCommand(service));
+        put("delete", new DeleteCommand(service));
     }};
 
     public static void main(String[] args) {
         System.out.println("Welcome for <YofikWebService> client, available commands:");
         commands.forEach((k, v) -> {
-            System.out.println("--- " + k + "\n");
+            System.out.println("--- " + k);
         });
+        System.out.println();
 
         while (true) {
             String nextLine = scanner.nextLine();
