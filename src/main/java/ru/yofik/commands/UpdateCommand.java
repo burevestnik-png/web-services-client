@@ -1,8 +1,6 @@
 package ru.yofik.commands;
 
-import ru.itmo.yofik.webservices.back.api.ws.CreateRequest;
-import ru.itmo.yofik.webservices.back.api.ws.UpdateRequest;
-import ru.itmo.yofik.webservices.back.api.ws.YofikWebService;
+import ru.itmo.yofik.webservices.back.api.ws.*;
 import ru.yofik.utils.ConsoleBuilder;
 import ru.yofik.utils.ObjectParser;
 
@@ -43,7 +41,14 @@ public class UpdateCommand implements Command {
         request.setLastName((String) answers.get("lastName"));
         request.setPatronymic((String) answers.get("patronymic"));
 
-        boolean response = api.update(request);
-        System.out.println("The API answered isUpdated=" + response);
+        boolean response = false;
+        try {
+            response = api.update(request);
+            System.out.println("The API answered isUpdated=" + response);
+        } catch (InvalidDataException e) {
+            System.out.println("The API returned an exception: \"" + e.getFaultInfo().getMessage() + "\"");
+        } catch (NotFoundException e) {
+            System.out.println("The API returned an exception: \"" + e.getFaultInfo().getMessage() + "\"");
+        }
     }
 }

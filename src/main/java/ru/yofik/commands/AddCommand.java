@@ -1,6 +1,7 @@
 package ru.yofik.commands;
 
 import ru.itmo.yofik.webservices.back.api.ws.CreateRequest;
+import ru.itmo.yofik.webservices.back.api.ws.InvalidDataException;
 import ru.itmo.yofik.webservices.back.api.ws.YofikWebService;
 import ru.yofik.utils.ConsoleBuilder;
 import ru.yofik.utils.ObjectParser;
@@ -40,7 +41,12 @@ public class AddCommand implements Command {
         request.setLastName((String) answers.get("lastName"));
         request.setPatronymic((String) answers.get("patronymic"));
 
-        long response = api.create(request);
-        System.out.println("The API answered code=" + response);
+        long response = 0;
+        try {
+            response = api.create(request);
+            System.out.println("The API answered code=" + response);
+        } catch (InvalidDataException e) {
+            System.out.println("The API returned an exception: \"" + e.getFaultInfo().getMessage() + "\"");
+        }
     }
 }

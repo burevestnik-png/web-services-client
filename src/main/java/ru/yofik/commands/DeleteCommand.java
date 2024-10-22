@@ -1,5 +1,6 @@
 package ru.yofik.commands;
 
+import ru.itmo.yofik.webservices.back.api.ws.NotFoundException;
 import ru.itmo.yofik.webservices.back.api.ws.YofikWebService;
 import ru.yofik.utils.ConsoleBuilder;
 import ru.yofik.utils.ObjectParser;
@@ -26,7 +27,12 @@ public class DeleteCommand implements Command {
         Map<String, Object> answers = consoleBuilder.requestPrompts();
         System.out.println(answers);
 
-        boolean isDeleted = api.delete((Long) answers.get("id"));
-        System.out.println("The API answered isDeleted=" + isDeleted);
+        boolean isDeleted = false;
+        try {
+            isDeleted = api.delete((Long) answers.get("id"));
+            System.out.println("The API answered isDeleted=" + isDeleted);
+        } catch (NotFoundException e) {
+            System.out.println("The API returned an exception: \"" + e.getFaultInfo().getMessage() + "\"");
+        }
     }
 }

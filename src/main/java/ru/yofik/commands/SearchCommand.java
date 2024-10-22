@@ -1,9 +1,6 @@
 package ru.yofik.commands;
 
-import ru.itmo.yofik.webservices.back.api.ws.Filters;
-import ru.itmo.yofik.webservices.back.api.ws.SearchRequest;
-import ru.itmo.yofik.webservices.back.api.ws.Student;
-import ru.itmo.yofik.webservices.back.api.ws.YofikWebService;
+import ru.itmo.yofik.webservices.back.api.ws.*;
 import ru.yofik.utils.ConsoleBuilder;
 import ru.yofik.utils.ObjectParser;
 import ru.yofik.utils.StudentPrinter;
@@ -47,11 +44,16 @@ public class SearchCommand implements Command {
 
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setFilters(filters);
-        List<Student> students = api.search(searchRequest);
+        List<Student> students = null;
+        try {
+            students = api.search(searchRequest);
 
-        System.out.println("The API answered:");
-        System.out.println("[");
-        students.forEach(s -> System.out.println(StudentPrinter.toJson(s)));
-        System.out.println("]");
+            System.out.println("The API answered:");
+            System.out.println("[");
+            students.forEach(s -> System.out.println(StudentPrinter.toJson(s)));
+            System.out.println("]");
+        } catch (InvalidDataException e) {
+            System.out.println("The API returned an exception: \"" + e.getFaultInfo().getMessage() + "\"");
+        }
     }
 }
