@@ -7,10 +7,12 @@ import ru.yofik.utils.StudentPrinter;
 
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.concurrent.ForkJoinPool;
 
 public class SearchCommand implements Command {
 
     private final YofikWebService api;
+    private final ForkJoinPool forkJoinPool;
 
     private final ConsoleBuilder consoleBuilder = new ConsoleBuilder(
             new ArrayList<ConsoleBuilder.Prompt>() {{
@@ -24,8 +26,9 @@ public class SearchCommand implements Command {
             }}
     );
 
-    public SearchCommand(YofikWebService api) {
+    public SearchCommand(YofikWebService api, ForkJoinPool forkJoinPool) {
         this.api = api;
+        this.forkJoinPool = forkJoinPool;
     }
 
     @Override
@@ -44,16 +47,20 @@ public class SearchCommand implements Command {
 
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setFilters(filters);
-        List<Student> students = null;
-        try {
-            students = api.search(searchRequest);
 
-            System.out.println("The API answered:");
-            System.out.println("[");
-            students.forEach(s -> System.out.println(StudentPrinter.toJson(s)));
-            System.out.println("]");
-        } catch (InvalidDataException e) {
-            System.out.println("The API returned an exception: \"" + e.getFaultInfo().getMessage() + "\"");
-        }
+        forkJoinPool.submit(() -> {
+            List<Student> students = null;
+            try {
+                students = api.search(searchRequest);
+
+                System.out.println("The API answered:");
+                System.out.println("[");
+                students.forEach(s -> System.out.println(StudentPrinter.toJson(s)));
+                System.out.println("]");
+            } catch (InvalidDataException e) {
+                System.out.println("The API returned an exception: \"" + e.getFaultInfo().getMessage() + "\"");
+            }
+        });
+
     }
 }

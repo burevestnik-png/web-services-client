@@ -5,6 +5,7 @@ import ru.itmo.yofik.webservices.back.api.ws.YofikWebService_Service;
 import ru.yofik.commands.*;
 
 import java.util.*;
+import java.util.concurrent.ForkJoinPool;
 
 public class Main {
 
@@ -13,7 +14,7 @@ public class Main {
     private static final YofikWebService service = serviceProvider.getYofikWebServicePort();
 
     private static Map<String, Command> commands = new HashMap<String, Command>() {{
-        put("search", new SearchCommand(service));
+        put("search", new SearchCommand(service, ForkJoinPool.commonPool()));
         put("add", new AddCommand(service));
         put("update", new UpdateCommand(service));
         put("delete", new DeleteCommand(service));

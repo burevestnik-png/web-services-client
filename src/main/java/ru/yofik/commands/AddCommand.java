@@ -1,15 +1,15 @@
 package ru.yofik.commands;
 
 import ru.itmo.yofik.webservices.back.api.ws.CreateRequest;
-import ru.itmo.yofik.webservices.back.api.ws.InvalidDataException;
+import ru.itmo.yofik.webservices.back.api.ws.CreateResponse;
 import ru.itmo.yofik.webservices.back.api.ws.YofikWebService;
 import ru.yofik.utils.ConsoleBuilder;
-import ru.yofik.utils.ObjectParser;
 
-import java.lang.reflect.Field;
+import javax.xml.ws.AsyncHandler;
+import javax.xml.ws.Response;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class AddCommand implements Command {
 
@@ -41,12 +41,18 @@ public class AddCommand implements Command {
         request.setLastName((String) answers.get("lastName"));
         request.setPatronymic((String) answers.get("patronymic"));
 
-        long response = 0;
+        api.createAsync(request, new AddCommandAsyncHandler());
+    }
+}
+
+class AddCommandAsyncHandler implements AsyncHandler<CreateResponse> {
+
+    @Override
+    public void handleResponse(Response<CreateResponse> response) {
         try {
-            response = api.create(request);
-            System.out.println("The API answered code=" + response);
-        } catch (InvalidDataException e) {
-            System.out.println("The API returned an exception: \"" + e.getFaultInfo().getMessage() + "\"");
+            System.out.println("The API answered code=" + response.get().getReturn());
+        } catch (InterruptedException | ExecutionException e) {
+            System.out.println("Error during execution request");
         }
     }
 }
