@@ -17,6 +17,8 @@ public class Main {
         put("add", new AddCommand(service));
         put("update", new UpdateCommand(service));
         put("delete", new DeleteCommand(service));
+        put("setAvatar", new SetAvatarCommand(service));
+        put("getAvatar", new GetAvatarCommand(service));
     }};
 
     public static void main(String[] args) {
